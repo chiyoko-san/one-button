@@ -1,14 +1,6 @@
 {
   "rules": {
-    "global": {
-      ".read": true,
-      ".write": true
-    },
-    "groups": {
-      "$gid": {
-        ".read": true,
-        ".write": true
-      }
-    }
+    ".read": "now < 1784559600000",  // 2026-7-21
+    ".write": "now < 1784559600000",  // 2026-7-21
   }
 }
