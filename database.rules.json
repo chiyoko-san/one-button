@@ -1,0 +1,14 @@
+{
+  "rules": {
+    "global": {
+      ".read": true,
+      ".write": true
+    },
+    "groups": {
+      "$gid": {
+        ".read": true,
+        ".write": true
+      }
+    }
+  }
+}

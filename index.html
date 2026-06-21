@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>THE BUTTON · 全人類が押す1つのボタン</title>
+<style>
+  :root {
+    --bg: #0e0e10;
+    --surface: #1a1a1e;
+    --surface2: #232328;
+    --text: #f2f2f0;
+    --muted: #8a8a90;
+    --hint: #5c5c63;
+    --info: #378add;
+    --info-bg: #12283f;
+    --danger: #e24b4a;
+    --danger-bg: #2a1414;
+    --border: rgba(255,255,255,0.1);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .wrap { max-width: 480px; margin: 0 auto; padding: 24px 16px 48px; }
+  .title { text-align: center; margin-bottom: 20px; }
+  .title .label { font-size: 12px; color: var(--muted); letter-spacing: 0.15em; margin: 0 0 6px; }
+  .title h1 { font-size: 20px; font-weight: 500; margin: 0; }
+
+  .group-bar {
+    display: flex; gap: 8px; align-items: center;
+    background: var(--surface); border: 0.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 8px 10px; margin-bottom: 20px;
+    font-size: 13px;
+  }
+  .group-bar .gname { flex: 1; font-weight: 500; color: var(--info); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .group-bar button {
+    border: 0.5px solid var(--border); background: var(--surface2); color: var(--text);
+    border-radius: 6px; padding: 5px 10px; font-size: 12px; cursor: pointer;
+  }
+  .group-bar button:active { transform: scale(0.97); }
+
+  .count-block { text-align: center; margin-bottom: 24px; }
+  .count {
+    font-size: 64px; font-weight: 500; line-height: 1;
+    font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
+  }
+  .status { font-size: 12px; color: var(--hint); margin: 10px 0 0; }
+
+  .bigbtn {
+    width: 100%; height: 96px; font-size: 24px; font-weight: 500;
+    border: 2px solid var(--info); border-radius: var(--radius);
+    background: var(--info-bg); color: var(--info);
+    cursor: pointer; margin-bottom: 12px;
+    transition: transform 0.05s; user-select: none;
+  }
+  .bigbtn:active { transform: scale(0.98); }
+  .bigbtn:disabled { opacity: 0.4; cursor: default; }
+
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .stat { background: var(--surface); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
+  .stat p { margin: 0; }
+  .stat .k { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .stat .v { font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
+
+  .destroy {
+    width: 100%; height: 48px; font-size: 14px; font-weight: 500;
+    border: 0.5px solid var(--danger); border-radius: var(--radius-sm);
+    background: transparent; color: var(--danger); cursor: pointer;
+  }
+  .destroy:active { background: var(--danger-bg); }
+  .note { font-size: 11px; color: var(--hint); text-align: center; margin: 8px 0 0; }
+  .log { margin-top: 20px; font-size: 12px; color: var(--hint); text-align: center; min-height: 18px; }
+
+  .modal-bg {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    display: none; align-items: center; justify-content: center; padding: 16px; z-index: 10;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: var(--surface); border: 0.5px solid var(--border);
+    border-radius: var(--radius); padding: 20px; width: 100%; max-width: 360px;
+  }
+  .modal h2 { font-size: 16px; font-weight: 500; margin: 0 0 6px; }
+  .modal p { font-size: 13px; color: var(--muted); margin: 0 0 14px; line-height: 1.6; }
+  .modal input {
+    width: 100%; height: 40px; padding: 0 12px; font-size: 14px;
+    background: var(--bg); border: 0.5px solid var(--border); border-radius: 6px;
+    color: var(--text); margin-bottom: 12px;
+  }
+  .modal .row { display: flex; gap: 8px; }
+  .modal .row button { flex: 1; height: 40px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; border: 0.5px solid var(--border); }
+  .modal .primary { background: var(--info-bg); color: var(--info); border-color: var(--info); }
+  .modal .ghost { background: transparent; color: var(--muted); }
+  .err { color: var(--danger); font-size: 12px; margin: -6px 0 10px; min-height: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">
+    <p class="label">THE BUTTON</p>
+    <h1 id="ctx-title">全人類が押す1つのボタン</h1>
+  </div>
+
+  <div class="group-bar">
+    <span class="gname" id="gname"><i>🌍</i> 全世界共通</span>
+    <button id="switchGroup">グループ切替</button>
+  </div>
+
+  <div class="count-block">
+    <div class="count" id="count">—</div>
+    <p class="status" id="status">接続中…</p>
+  </div>
+
+  <button class="bigbtn" id="bigbtn" disabled>押す</button>
+
+  <div class="stats">
+    <div class="stat"><p class="k">あなたの貢献</p><p class="v" id="mine">0</p></div>
+    <div class="stat"><p class="k">過去最高記録</p><p class="v" id="peak">0</p></div>
+  </div>
+
+  <button class="destroy" id="destroy">💣 全てを破壊する（0にリセット）</button>
+  <p class="note">破壊すると、あなたの名が「破壊者」として刻まれます</p>
+
+  <div class="log" id="log"></div>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h2>グループを選ぶ</h2>
+    <p>合言葉を入れると、その合言葉のグループに参加します。同じ合言葉の人だけで競えます。空欄なら全世界共通。</p>
+    <input id="groupInput" placeholder="合言葉（例: my-team / 空欄で全世界）" maxlength="40" />
+    <p class="err" id="groupErr"></p>
+    <div class="row">
+      <button class="ghost" id="cancelGroup">キャンセル</button>
+      <button class="primary" id="joinGroup">参加する</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, runTransaction, onValue, set, get }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+// ===== 1. ここを自分のFirebase設定に書き換える =====
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+  projectId: "YOUR_PROJECT",
+};
+// ====================================================
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+const $ = id => document.getElementById(id);
+let mine = 0;
+let currentGroup = localStorage.getItem("tb_group") || "";   // "" = global
+const name = (() => {
+  let n = localStorage.getItem("tb_name");
+  return n;
+})();
+
+function groupPath(g){ return g ? "groups/" + g : "global"; }
+function groupLabel(g){ return g ? "🔒 " + g : "🌍 全世界共通"; }
+
+let unsub = null;
+function watch(){
+  if (unsub) unsub();
+  const path = groupPath(currentGroup);
+  $("gname").textContent = groupLabel(currentGroup);
+  $("ctx-title").textContent = currentGroup ? `「${currentGroup}」のボタン` : "全人類が押す1つのボタン";
+  mine = parseInt(localStorage.getItem("tb_mine_" + (currentGroup||"global")) || "0");
+  $("mine").textContent = mine.toLocaleString();
+
+  const r = ref(db, path);
+  unsub = onValue(r, snap => {
+    const s = snap.val() || { count:0, peak:0, destroyCount:0, lastDestroyer:null };
+    $("count").textContent = (s.count||0).toLocaleString();
+    $("peak").textContent = (s.peak||0).toLocaleString();
+    $("status").textContent = "接続済み · リアルタイム同期中";
+    $("bigbtn").disabled = false;
+    if (s.lastDestroyer) {
+      $("log").textContent = `最後の破壊者: ${s.lastDestroyer} （${s.destroyCount||0}回目の崩壊）`;
+    } else {
+      $("log").textContent = "まだ誰も破壊していない。平和。";
+    }
+  }, err => {
+    $("status").textContent = "接続エラー: Firebase設定を確認してください";
+  });
+}
+
+$("bigbtn").addEventListener("click", () => {
+  mine++;
+  localStorage.setItem("tb_mine_" + (currentGroup||"global"), mine);
+  $("mine").textContent = mine.toLocaleString();
+  const r = ref(db, groupPath(currentGroup));
+  runTransaction(r, cur => {
+    cur = cur || { count:0, peak:0, destroyCount:0, lastDestroyer:null };
+    cur.count = (cur.count||0) + 1;
+    if (cur.count > (cur.peak||0)) cur.peak = cur.count;
+    return cur;
+  });
+});
+
+$("destroy").addEventListener("click", () => {
+  let who = localStorage.getItem("tb_name");
+  who = prompt("破壊者として名を刻みます。あなたの名前は？", who || "名無しの破壊者");
+  if (who === null) return;
+  who = (who.trim() || "名無しの破壊者").slice(0, 20);
+  localStorage.setItem("tb_name", who);
+  const r = ref(db, groupPath(currentGroup));
+  runTransaction(r, cur => {
+    cur = cur || { count:0, peak:0, destroyCount:0, lastDestroyer:null };
+    if ((cur.count||0) > (cur.peak||0)) cur.peak = cur.count;
+    cur.count = 0;
+    cur.destroyCount = (cur.destroyCount||0) + 1;
+    cur.lastDestroyer = who;
+    return cur;
+  });
+});
+
+// group modal
+$("switchGroup").addEventListener("click", () => {
+  $("groupInput").value = currentGroup;
+  $("groupErr").textContent = "";
+  $("modalBg").classList.add("show");
+});
+$("cancelGroup").addEventListener("click", () => $("modalBg").classList.remove("show"));
+$("joinGroup").addEventListener("click", () => {
+  let g = $("groupInput").value.trim();
+  if (g && !/^[a-zA-Z0-9_\-ぁ-んァ-ヶ一-龠]+$/.test(g)) {
+    $("groupErr").textContent = "使える文字: 英数字・かな・漢字・_ -";
+    return;
+  }
+  currentGroup = g;
+  localStorage.setItem("tb_group", g);
+  $("modalBg").classList.remove("show");
+  watch();
+});
+
+watch();
+</script>
+</body>
+</html>
