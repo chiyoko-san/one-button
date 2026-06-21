@@ -6,102 +6,113 @@
 <title>THE BUTTON · 全人類が押す1つのボタン</title>
 <style>
   :root {
-    --bg: #0e0e10;
-    --surface: #1a1a1e;
-    --surface2: #232328;
-    --text: #f2f2f0;
-    --muted: #8a8a90;
-    --hint: #5c5c63;
-    --info: #378add;
-    --info-bg: #12283f;
-    --danger: #e24b4a;
-    --danger-bg: #2a1414;
+    --bg: #0e0e10; --surface: #1a1a1e; --surface2: #232328;
+    --text: #f2f2f0; --muted: #8a8a90; --hint: #5c5c63;
+    --info: #4a9eff; --info-bg: #12283f;
+    --gold: #f0b429; --gold-bg: #2a2410;
+    --danger: #e24b4a; --danger-bg: #2a1414;
+    --green: #3ecf8e;
     --border: rgba(255,255,255,0.1);
-    --radius: 12px;
-    --radius-sm: 8px;
+    --radius: 12px; --radius-sm: 8px;
   }
   * { box-sizing: border-box; }
-  html, body {
-    margin: 0; padding: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .wrap { max-width: 480px; margin: 0 auto; padding: 24px 16px 48px; }
-  .title { text-align: center; margin-bottom: 20px; }
-  .title .label { font-size: 12px; color: var(--muted); letter-spacing: 0.15em; margin: 0 0 6px; }
-  .title h1 { font-size: 20px; font-weight: 500; margin: 0; }
+  html, body { margin:0; padding:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
+    -webkit-tap-highlight-color:transparent; }
+  .wrap { max-width:480px; margin:0 auto; padding:20px 16px 48px; }
+  .title { text-align:center; margin-bottom:16px; }
+  .title .label { font-size:12px; color:var(--muted); letter-spacing:0.15em; margin:0 0 6px; }
+  .title h1 { font-size:19px; font-weight:500; margin:0; }
 
-  .group-bar {
-    display: flex; gap: 8px; align-items: center;
-    background: var(--surface); border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm); padding: 8px 10px; margin-bottom: 20px;
-    font-size: 13px;
-  }
-  .group-bar .gname { flex: 1; font-weight: 500; color: var(--info); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .group-bar button {
-    border: 0.5px solid var(--border); background: var(--surface2); color: var(--text);
-    border-radius: 6px; padding: 5px 10px; font-size: 12px; cursor: pointer;
-  }
-  .group-bar button:active { transform: scale(0.97); }
+  .group-bar { display:flex; gap:8px; align-items:center; background:var(--surface);
+    border:0.5px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px;
+    margin-bottom:16px; font-size:13px; }
+  .group-bar .gname { flex:1; font-weight:500; color:var(--info); overflow:hidden;
+    text-overflow:ellipsis; white-space:nowrap; }
+  .group-bar button { border:0.5px solid var(--border); background:var(--surface2);
+    color:var(--text); border-radius:6px; padding:5px 10px; font-size:12px; cursor:pointer; }
 
-  .count-block { text-align: center; margin-bottom: 24px; }
-  .count {
-    font-size: 64px; font-weight: 500; line-height: 1;
-    font-variant-numeric: tabular-nums; letter-spacing: -0.02em;
-  }
-  .status { font-size: 12px; color: var(--hint); margin: 10px 0 0; }
+  .level-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .level-badge { background:var(--gold-bg); color:var(--gold); border:0.5px solid var(--gold);
+    border-radius:var(--radius-sm); padding:6px 12px; font-size:14px; font-weight:500; white-space:nowrap; }
+  .level-prog { flex:1; }
+  .level-prog .bar { height:8px; background:var(--surface2); border-radius:4px; overflow:hidden; }
+  .level-prog .bar > div { height:100%; background:var(--gold); width:0%; transition:width 0.3s; }
+  .level-prog .txt { font-size:11px; color:var(--hint); margin-top:4px; }
 
-  .bigbtn {
-    width: 100%; height: 96px; font-size: 24px; font-weight: 500;
-    border: 2px solid var(--info); border-radius: var(--radius);
-    background: var(--info-bg); color: var(--info);
-    cursor: pointer; margin-bottom: 12px;
-    transition: transform 0.05s; user-select: none;
-  }
-  .bigbtn:active { transform: scale(0.98); }
-  .bigbtn:disabled { opacity: 0.4; cursor: default; }
+  .count-block { text-align:center; margin-bottom:20px; }
+  .count { font-size:60px; font-weight:500; line-height:1; font-variant-numeric:tabular-nums;
+    letter-spacing:-0.02em; transition:transform 0.08s; }
+  .count.bump { transform:scale(1.06); }
+  .status { font-size:12px; color:var(--hint); margin:8px 0 0; }
 
-  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-  .stat { background: var(--surface); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
-  .stat p { margin: 0; }
-  .stat .k { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-  .stat .v { font-size: 20px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .bigbtn { width:100%; height:96px; font-size:24px; font-weight:500;
+    border:2px solid var(--info); border-radius:var(--radius); background:var(--info-bg);
+    color:var(--info); cursor:pointer; margin-bottom:12px; transition:transform 0.05s; user-select:none; }
+  .bigbtn:active { transform:scale(0.98); }
+  .bigbtn:disabled { opacity:0.4; cursor:default; }
+  .shake { animation:shake 0.4s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
+    40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
 
-  .destroy {
-    width: 100%; height: 48px; font-size: 14px; font-weight: 500;
-    border: 0.5px solid var(--danger); border-radius: var(--radius-sm);
-    background: transparent; color: var(--danger); cursor: pointer;
-  }
-  .destroy:active { background: var(--danger-bg); }
-  .note { font-size: 11px; color: var(--hint); text-align: center; margin: 8px 0 0; }
-  .log { margin-top: 20px; font-size: 12px; color: var(--hint); text-align: center; min-height: 18px; }
+  .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .stat { background:var(--surface); border-radius:var(--radius-sm); padding:12px; text-align:center; }
+  .stat p { margin:0; }
+  .stat .k { font-size:12px; color:var(--muted); margin-bottom:4px; }
+  .stat .v { font-size:20px; font-weight:500; font-variant-numeric:tabular-nums; }
 
-  .modal-bg {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-    display: none; align-items: center; justify-content: center; padding: 16px; z-index: 10;
-  }
-  .modal-bg.show { display: flex; }
-  .modal {
-    background: var(--surface); border: 0.5px solid var(--border);
-    border-radius: var(--radius); padding: 20px; width: 100%; max-width: 360px;
-  }
-  .modal h2 { font-size: 16px; font-weight: 500; margin: 0 0 6px; }
-  .modal p { font-size: 13px; color: var(--muted); margin: 0 0 14px; line-height: 1.6; }
-  .modal input {
-    width: 100%; height: 40px; padding: 0 12px; font-size: 14px;
-    background: var(--bg); border: 0.5px solid var(--border); border-radius: 6px;
-    color: var(--text); margin-bottom: 12px;
-  }
-  .modal .row { display: flex; gap: 8px; }
-  .modal .row button { flex: 1; height: 40px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; border: 0.5px solid var(--border); }
-  .modal .primary { background: var(--info-bg); color: var(--info); border-color: var(--info); }
-  .modal .ghost { background: transparent; color: var(--muted); }
-  .err { color: var(--danger); font-size: 12px; margin: -6px 0 10px; min-height: 14px; }
+  .destroy-block { background:var(--surface); border:0.5px solid var(--border);
+    border-radius:var(--radius-sm); padding:12px; margin-bottom:16px; }
+  .destroy-block .head { display:flex; justify-content:space-between; align-items:center;
+    font-size:13px; margin-bottom:8px; }
+  .destroy-block .head .lbl { color:var(--muted); }
+  .destroy-block .head .amt { color:var(--danger); font-weight:500; font-variant-numeric:tabular-nums; }
+  .gauge { height:8px; background:var(--surface2); border-radius:4px; overflow:hidden; margin-bottom:10px; }
+  .gauge > div { height:100%; background:var(--danger); width:0%; transition:width 0.2s; }
+  .destroy { width:100%; height:44px; font-size:14px; font-weight:500;
+    border:0.5px solid var(--danger); border-radius:var(--radius-sm); background:transparent;
+    color:var(--danger); cursor:pointer; }
+  .destroy:disabled { opacity:0.35; cursor:default; }
+  .destroy:not(:disabled):active { background:var(--danger-bg); }
+
+  .panels { display:grid; gap:12px; margin-top:8px; }
+  .panel { background:var(--surface); border:0.5px solid var(--border);
+    border-radius:var(--radius-sm); padding:12px 14px; }
+  .panel h3 { font-size:13px; font-weight:500; margin:0 0 8px; color:var(--muted); }
+  .rank-row { display:flex; align-items:center; gap:8px; font-size:13px; padding:4px 0; }
+  .rank-row .pos { width:20px; color:var(--hint); font-variant-numeric:tabular-nums; }
+  .rank-row .nm { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .rank-row .sc { font-variant-numeric:tabular-nums; color:var(--muted); }
+  .rank-row.gold .pos { color:var(--gold); }
+  .rank-row.danger .nm { color:var(--danger); }
+  .empty { font-size:12px; color:var(--hint); }
+
+  .log { margin-top:16px; font-size:12px; color:var(--hint); text-align:center; min-height:18px; }
+  .toast { position:fixed; left:50%; top:24px; transform:translateX(-50%) translateY(-80px);
+    background:var(--gold); color:#000; font-weight:500; padding:10px 20px; border-radius:999px;
+    font-size:14px; opacity:0; transition:all 0.4s; z-index:20; pointer-events:none; }
+  .toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+
+  .modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none;
+    align-items:center; justify-content:center; padding:16px; z-index:30; }
+  .modal-bg.show { display:flex; }
+  .modal { background:var(--surface); border:0.5px solid var(--border); border-radius:var(--radius);
+    padding:20px; width:100%; max-width:360px; }
+  .modal h2 { font-size:16px; font-weight:500; margin:0 0 6px; }
+  .modal p { font-size:13px; color:var(--muted); margin:0 0 14px; line-height:1.6; }
+  .modal input { width:100%; height:40px; padding:0 12px; font-size:14px; background:var(--bg);
+    border:0.5px solid var(--border); border-radius:6px; color:var(--text); margin-bottom:12px; }
+  .modal .row { display:flex; gap:8px; }
+  .modal .row button { flex:1; height:40px; border-radius:6px; font-size:14px; font-weight:500;
+    cursor:pointer; border:0.5px solid var(--border); }
+  .modal .primary { background:var(--info-bg); color:var(--info); border-color:var(--info); }
+  .modal .ghost { background:transparent; color:var(--muted); }
+  .err { color:var(--danger); font-size:12px; margin:-6px 0 10px; min-height:14px; }
 </style>
 </head>
 <body>
+<div id="toast" class="toast"></div>
+
 <div class="wrap">
   <div class="title">
     <p class="label">THE BUTTON</p>
@@ -109,8 +120,16 @@
   </div>
 
   <div class="group-bar">
-    <span class="gname" id="gname"><i>🌍</i> 全世界共通</span>
+    <span class="gname" id="gname">🌍 全世界共通</span>
     <button id="switchGroup">グループ切替</button>
+  </div>
+
+  <div class="level-row">
+    <span class="level-badge" id="levelBadge">Lv.1</span>
+    <div class="level-prog">
+      <div class="bar"><div id="levelBar"></div></div>
+      <div class="txt" id="levelTxt">次のレベルまで —</div>
+    </div>
   </div>
 
   <div class="count-block">
@@ -125,8 +144,25 @@
     <div class="stat"><p class="k">過去最高記録</p><p class="v" id="peak">0</p></div>
   </div>
 
-  <button class="destroy" id="destroy">💣 全てを破壊する（0にリセット）</button>
-  <p class="note">破壊すると、あなたの名が「破壊者」として刻まれます</p>
+  <div class="destroy-block">
+    <div class="head">
+      <span class="lbl">破壊ゲージ</span>
+      <span class="amt" id="chargeTxt">0 / 100</span>
+    </div>
+    <div class="gauge"><div id="chargeBar"></div></div>
+    <button class="destroy" id="destroy" disabled>💣 全てを破壊する</button>
+  </div>
+
+  <div class="panels">
+    <div class="panel">
+      <h3>👑 貢献ランキング（世界王者）</h3>
+      <div id="contribList"><p class="empty">まだ誰も押していない</p></div>
+    </div>
+    <div class="panel">
+      <h3>💀 破壊神の殿堂</h3>
+      <div id="destroyerList"><p class="empty">まだ平和</p></div>
+    </div>
+  </div>
 
   <div class="log" id="log"></div>
 </div>
@@ -144,14 +180,27 @@
   </div>
 </div>
 
+<div class="modal-bg" id="nameBg">
+  <div class="modal">
+    <h2 id="nameTitle">名前を入力</h2>
+    <p id="nameDesc">ランキングに表示される名前です。</p>
+    <input id="nameInput" placeholder="あなたの名前" maxlength="20" />
+    <p class="err" id="nameErr"></p>
+    <div class="row">
+      <button class="ghost" id="nameCancel">キャンセル</button>
+      <button class="primary" id="nameOk">決定</button>
+    </div>
+  </div>
+</div>
+
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, runTransaction, onValue, set, get }
+import { getDatabase, ref, runTransaction, onValue }
   from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 // ===== 1. ここを自分のFirebase設定に書き換える =====
 const firebaseConfig = {
-  apiKey: "...",
+  apiKey: "YOUR_API_KEY",
   authDomain: "one-button-7ab53.firebaseapp.com",
   databaseURL: "https://one-button-7ab53-default-rtdb.firebaseio.com",
   projectId: "one-button-7ab53",
@@ -162,89 +211,197 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 const $ = id => document.getElementById(id);
-let mine = 0;
-let currentGroup = localStorage.getItem("tb_group") || "";   // "" = global
-const name = (() => {
-  let n = localStorage.getItem("tb_name");
-  return n;
-})();
+
+// レベル閾値（世界カウントがこの値を超えるとレベルアップ）
+const LEVELS = [0, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000];
+function levelOf(count){
+  let lv = 1;
+  for (let i=1;i<LEVELS.length;i++){ if (count >= LEVELS[i]) lv = i+1; }
+  return lv;
+}
+function nextThreshold(lv){ return LEVELS[lv] ?? null; }
+// レベルに応じた破壊コスト
+function destroyCost(lv){ return 100 * lv; }
+
+let currentGroup = localStorage.getItem("tb_group") || "";
+let myName = localStorage.getItem("tb_name") || "";
+let mine = 0, charge = 0, prevLevel = 1, firstLoad = true;
+let pendingDestroy = false;
 
 function groupPath(g){ return g ? "groups/" + g : "global"; }
 function groupLabel(g){ return g ? "🔒 " + g : "🌍 全世界共通"; }
+function uid(){
+  let u = localStorage.getItem("tb_uid");
+  if (!u){ u = "u" + Math.random().toString(36).slice(2,10); localStorage.setItem("tb_uid", u); }
+  return u;
+}
+
+function toast(msg){
+  const t = $("toast"); t.textContent = msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 2200);
+}
+
+function renderCharge(lv){
+  const cost = destroyCost(lv);
+  const pct = Math.min(100, Math.round(charge/cost*100));
+  $("chargeBar").style.width = pct + "%";
+  $("chargeTxt").textContent = `${charge.toLocaleString()} / ${cost.toLocaleString()}`;
+  const ready = charge >= cost;
+  $("destroy").disabled = !ready;
+  $("destroy").textContent = ready ? "💣 全てを破壊する（発動可能！）" : `💣 破壊にはあと ${(cost-charge).toLocaleString()} 回`;
+}
+
+function renderRanks(state){
+  const contrib = state.contrib || {};
+  const arr = Object.entries(contrib).map(([k,v])=>v).sort((a,b)=>b.score-a.score).slice(0,5);
+  if (arr.length===0){ $("contribList").innerHTML = '<p class="empty">まだ誰も押していない</p>'; }
+  else {
+    $("contribList").innerHTML = arr.map((r,i)=>{
+      const cls = i===0 ? "rank-row gold" : "rank-row";
+      const crown = i===0 ? "👑 " : "";
+      return `<div class="${cls}"><span class="pos">${i+1}</span><span class="nm">${crown}${esc(r.name)}</span><span class="sc">${(r.score||0).toLocaleString()}</span></div>`;
+    }).join("");
+  }
+  const dz = state.destroyers || {};
+  const darr = Object.entries(dz).map(([k,v])=>v).sort((a,b)=>b.count-a.count).slice(0,5);
+  if (darr.length===0){ $("destroyerList").innerHTML = '<p class="empty">まだ平和</p>'; }
+  else {
+    $("destroyerList").innerHTML = darr.map((r,i)=>
+      `<div class="rank-row danger"><span class="pos">${i+1}</span><span class="nm">💀 ${esc(r.name)}</span><span class="sc">${(r.count||0)}回</span></div>`
+    ).join("");
+  }
+}
+function esc(s){ return String(s).replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
 
 let unsub = null;
 function watch(){
   if (unsub) unsub();
-  const path = groupPath(currentGroup);
+  firstLoad = true;
   $("gname").textContent = groupLabel(currentGroup);
   $("ctx-title").textContent = currentGroup ? `「${currentGroup}」のボタン` : "全人類が押す1つのボタン";
-  mine = parseInt(localStorage.getItem("tb_mine_" + (currentGroup||"global")) || "0");
+  mine = parseInt(localStorage.getItem("tb_mine_"+(currentGroup||"global"))||"0");
+  charge = parseInt(localStorage.getItem("tb_charge_"+(currentGroup||"global"))||"0");
   $("mine").textContent = mine.toLocaleString();
 
-  const r = ref(db, path);
-  unsub = onValue(r, snap => {
-    const s = snap.val() || { count:0, peak:0, destroyCount:0, lastDestroyer:null };
-    $("count").textContent = (s.count||0).toLocaleString();
+  onValue(ref(db, groupPath(currentGroup)), snap => {
+    const s = snap.val() || {};
+    const count = s.count||0;
+    $("count").textContent = count.toLocaleString();
     $("peak").textContent = (s.peak||0).toLocaleString();
     $("status").textContent = "接続済み · リアルタイム同期中";
     $("bigbtn").disabled = false;
-    if (s.lastDestroyer) {
-      $("log").textContent = `最後の破壊者: ${s.lastDestroyer} （${s.destroyCount||0}回目の崩壊）`;
+
+    const lv = levelOf(count);
+    $("levelBadge").textContent = "Lv." + lv;
+    const nt = nextThreshold(lv);
+    if (nt){
+      const base = LEVELS[lv-1];
+      const pct = Math.round((count-base)/(nt-base)*100);
+      $("levelBar").style.width = Math.min(100,pct) + "%";
+      $("levelTxt").textContent = `次のレベルまで ${(nt-count).toLocaleString()}`;
+    } else {
+      $("levelBar").style.width = "100%";
+      $("levelTxt").textContent = "最高レベル到達！";
+    }
+    renderCharge(lv);
+
+    if (!firstLoad && lv > prevLevel){
+      toast(`🎉 レベルアップ！ Lv.${lv} 達成！`);
+    }
+    prevLevel = lv; firstLoad = false;
+
+    if (s.lastDestroyer){
+      $("log").textContent = `最後の破壊者: ${s.lastDestroyer} （${s.destroyTotal||0}回目の崩壊）`;
     } else {
       $("log").textContent = "まだ誰も破壊していない。平和。";
     }
-  }, err => {
-    $("status").textContent = "接続エラー: Firebase設定を確認してください";
-  });
+    renderRanks(s);
+  }, err => { $("status").textContent = "接続エラー: Firebase設定を確認してください"; });
 }
 
-$("bigbtn").addEventListener("click", () => {
-  mine++;
-  localStorage.setItem("tb_mine_" + (currentGroup||"global"), mine);
-  $("mine").textContent = mine.toLocaleString();
-  const r = ref(db, groupPath(currentGroup));
-  runTransaction(r, cur => {
-    cur = cur || { count:0, peak:0, destroyCount:0, lastDestroyer:null };
-    cur.count = (cur.count||0) + 1;
-    if (cur.count > (cur.peak||0)) cur.peak = cur.count;
-    return cur;
-  });
+function requireName(cb, isDestroy){
+  if (myName){ cb(); return; }
+  $("nameTitle").textContent = isDestroy ? "破壊者として名を刻む" : "名前を入力";
+  $("nameDesc").textContent = isDestroy ? "破壊神の殿堂に記録されます。" : "貢献ランキングに表示されます。";
+  $("nameErr").textContent = "";
+  $("nameInput").value = "";
+  $("nameBg").classList.add("show");
+  $("nameInput").focus();
+  pendingCb = cb;
+}
+let pendingCb = null;
+$("nameOk").addEventListener("click", ()=>{
+  const v = $("nameInput").value.trim().slice(0,20);
+  if (!v){ $("nameErr").textContent = "名前を入れてください"; return; }
+  myName = v; localStorage.setItem("tb_name", v);
+  $("nameBg").classList.remove("show");
+  if (pendingCb){ const f=pendingCb; pendingCb=null; f(); }
+});
+$("nameCancel").addEventListener("click", ()=>{ $("nameBg").classList.remove("show"); pendingCb=null; });
+
+$("bigbtn").addEventListener("click", ()=>{
+  requireName(()=>{
+    mine++; charge++;
+    localStorage.setItem("tb_mine_"+(currentGroup||"global"), mine);
+    localStorage.setItem("tb_charge_"+(currentGroup||"global"), charge);
+    $("mine").textContent = mine.toLocaleString();
+    const c = $("count");
+    c.classList.add("bump"); setTimeout(()=>c.classList.remove("bump"),80);
+    runTransaction(ref(db, groupPath(currentGroup)), cur=>{
+      cur = cur || {};
+      cur.count = (cur.count||0)+1;
+      if (cur.count > (cur.peak||0)) cur.peak = cur.count;
+      cur.contrib = cur.contrib || {};
+      const u = uid();
+      cur.contrib[u] = { name: myName, score: ((cur.contrib[u]?.score)||0)+1 };
+      return cur;
+    });
+    const lv = levelOf(parseInt($("count").textContent.replace(/,/g,''))||0);
+    renderCharge(lv);
+  }, false);
 });
 
-$("destroy").addEventListener("click", () => {
-  let who = localStorage.getItem("tb_name");
-  who = prompt("破壊者として名を刻みます。あなたの名前は？", who || "名無しの破壊者");
-  if (who === null) return;
-  who = (who.trim() || "名無しの破壊者").slice(0, 20);
-  localStorage.setItem("tb_name", who);
-  const r = ref(db, groupPath(currentGroup));
-  runTransaction(r, cur => {
-    cur = cur || { count:0, peak:0, destroyCount:0, lastDestroyer:null };
-    if ((cur.count||0) > (cur.peak||0)) cur.peak = cur.count;
-    cur.count = 0;
-    cur.destroyCount = (cur.destroyCount||0) + 1;
-    cur.lastDestroyer = who;
-    return cur;
-  });
+$("destroy").addEventListener("click", ()=>{
+  requireName(()=>{
+    const count = parseInt($("count").textContent.replace(/,/g,''))||0;
+    const lv = levelOf(count);
+    const cost = destroyCost(lv);
+    if (charge < cost){ toast("ゲージが足りない"); return; }
+    if (!confirm(`破壊ゲージ ${cost} を消費して世界を0に戻します。よろしいですか？`)) return;
+    charge -= cost;
+    localStorage.setItem("tb_charge_"+(currentGroup||"global"), charge);
+    document.querySelector(".wrap").classList.add("shake");
+    setTimeout(()=>document.querySelector(".wrap").classList.remove("shake"),400);
+    runTransaction(ref(db, groupPath(currentGroup)), cur=>{
+      cur = cur || {};
+      if ((cur.count||0) > (cur.peak||0)) cur.peak = cur.count;
+      cur.count = 0;
+      cur.destroyTotal = (cur.destroyTotal||0)+1;
+      cur.lastDestroyer = myName;
+      cur.destroyers = cur.destroyers || {};
+      const u = uid();
+      cur.destroyers[u] = { name: myName, count: ((cur.destroyers[u]?.count)||0)+1 };
+      return cur;
+    });
+    toast("💥 世界を破壊した");
+    renderCharge(lv);
+  }, true);
 });
 
-// group modal
-$("switchGroup").addEventListener("click", () => {
+$("switchGroup").addEventListener("click", ()=>{
   $("groupInput").value = currentGroup;
   $("groupErr").textContent = "";
   $("modalBg").classList.add("show");
 });
-$("cancelGroup").addEventListener("click", () => $("modalBg").classList.remove("show"));
-$("joinGroup").addEventListener("click", () => {
+$("cancelGroup").addEventListener("click", ()=>$("modalBg").classList.remove("show"));
+$("joinGroup").addEventListener("click", ()=>{
   let g = $("groupInput").value.trim();
-  if (g && !/^[a-zA-Z0-9_\-ぁ-んァ-ヶ一-龠]+$/.test(g)) {
-    $("groupErr").textContent = "使える文字: 英数字・かな・漢字・_ -";
-    return;
+  if (g && !/^[a-zA-Z0-9_\-ぁ-んァ-ヶ一-龠]+$/.test(g)){
+    $("groupErr").textContent = "使える文字: 英数字・かな・漢字・_ -"; return;
   }
-  currentGroup = g;
-  localStorage.setItem("tb_group", g);
+  currentGroup = g; localStorage.setItem("tb_group", g);
   $("modalBg").classList.remove("show");
-  watch();
+  prevLevel = 1; watch();
 });
 
 watch();

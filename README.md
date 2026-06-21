@@ -1,84 +1,65 @@
 # THE BUTTON — 全人類が押す1つのボタン
 
 全世界の人が同じ1つのカウンターを押し続けるゲーム。
-誰でも「破壊」ボタンで積み上がった数字を0に戻せる。協力 vs 破壊。
-合言葉でグループを作れば、仲間内だけのボタンも持てる。
+ただし「破壊」はタダではできない。コツコツ押してゲージを溜めた者だけが世界を0に戻せる。
+協力してレベルを上げる勢力 vs それを崩す破壊神。合言葉でグループも作れる。
+
+## ゲームルール（案D：全部入り）
+- **押す**：世界カウント +1、自分の貢献 +1、破壊ゲージ +1
+- **レベル**：世界カウントが閾値（1,000 → 5,000 → 1万 → 5万 → 10万 …）を超えるとレベルアップ。全員に演出
+- **破壊ゲージ**：自分で押した回数が溜まると破壊可能。必要量は `100 × 現在のレベル`。高レベルほど破壊が重い＝タダ壊し封じ
+- **貢献ランキング（世界王者）**：押した回数の個人ランキング。1位は👑
+- **破壊神の殿堂**：破壊した人の名前と回数を記録
+- **peak記録は不滅**：壊されても過去最高到達点は残る
 
 ## 仕組み
-- フロント: 静的HTML 1枚（`index.html`）→ GitHub Pages で公開
-- バックエンド: Firebase Realtime Database（無料枠で十分・サーバー管理不要）
-- 同期: 全クライアントにリアルタイム反映。カウントは `runTransaction` で競合なし
+- フロント：静的HTML 1枚（`index.html`）→ GitHub Pages
+- バックエンド：Firebase Realtime Database（無料枠・サーバー管理不要）
+- 同期：全クライアントにリアルタイム反映。カウントは `runTransaction` で競合なし
 
 ---
 
-## セットアップ手順
+## セットアップ
 
-### 1. Firebase プロジェクトを作る
-1. https://console.firebase.google.com/ で「プロジェクトを追加」
-2. 左メニュー「構築」→「Realtime Database」→「データベースを作成」
-3. ロケーションを選び、**テストモード**で開始（後でルールを締める）
-
-### 2. 設定をコピー
-1. プロジェクト設定（歯車）→「マイアプリ」→ ウェブアプリ `</>` を追加
-2. 表示される `firebaseConfig` を、`index.html` の以下の部分に貼り替える：
+### 1. firebaseConfig を貼る
+Firebaseコンソール → プロジェクト設定（歯車）→「マイアプリ」→ ウェブアプリ `</>` を追加 → 表示される `firebaseConfig` を `index.html` の該当箇所に貼り替える。
 
 ```js
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "YOUR_PROJECT",
+  apiKey: "...",
+  authDomain: "one-button-7ab53.firebaseapp.com",
+  databaseURL: "https://one-button-7ab53-default-rtdb.firebaseio.com",
+  projectId: "one-button-7ab53",
 };
 ```
+`databaseURL` は必須。Realtime Databaseの画面上部のURLを使う。
 
-> `databaseURL` は必須。Realtime Database の画面上部に表示される URL を使う。
-
-### 3. データベースのルール（推奨）
-テストモードのままだと誰でも全データを書き換えられる。最低限こうしておく：
+### 2. データベースのルール
+コンソールの Realtime Database →「ルール」タブに貼り付けて公開：
 
 ```json
 {
   "rules": {
-    "global": {
-      ".read": true,
-      ".write": true
-    },
+    "global": { ".read": true, ".write": true },
     "groups": {
-      "$gid": {
-        ".read": true,
-        ".write": true
-      }
+      "$gid": { ".read": true, ".write": true }
     }
   }
 }
 ```
 
-（このゲームは「誰でも押せる・誰でも壊せる」が仕様なので write は開放でOK。荒らし対策をするなら App Check や匿名認証を足す。）
+### 3. GitHub Pages で公開
+push 済みなら Settings → Pages で `main` / `(root)` を選択済みのはず。
+公開URL：`https://chiyoko-san.github.io/one-button/`
 
 ---
 
-## GitHub Pages で公開
-
-```bash
-git init
-git add .
-git commit -m "THE BUTTON"
-git branch -M main
-git remote add origin https://github.com/＜ユーザー名＞/the-button.git
-git push -u origin main
-```
-
-1. GitHub のリポジトリ →「Settings」→「Pages」
-2. Source を `main` ブランチ / `root` に設定して Save
-3. 数分後 `https://＜ユーザー名＞.github.io/the-button/` で公開
-
----
-
-## カスタムのアイデア
-- 破壊者ランキング（`destroyers/` に名前と回数を積む）
-- 押した瞬間の演出（画面シェイク・効果音）
-- レベル制（1000ごとにファンファーレ）
-- 地域別カウント（IPや手動選択で国・都道府県別）
+## 拡張アイデア
+- 効果音（押下音・破壊音・レベルアップのファンファーレ）
+- 破壊予告タイマー（押すと一定時間で自動破壊。緊張感）
+- 称号システム（1万貢献で「神の指」など）
+- 連打ボーナス／コンボ
+- 国・都道府県別カウント
 
 ## ライセンス
-MIT — 好きにどうぞ。
+MIT
