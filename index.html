@@ -6,31 +6,39 @@
 <title>THE BUTTON · 全人類が押す1つのボタン</title>
 <style>
   :root {
-    --bg: #0e0e10; --surface: #1a1a1e; --surface2: #232328;
-    --text: #f2f2f0; --muted: #8a8a90; --hint: #5c5c63;
-    --info: #4a9eff; --info-bg: #12283f;
-    --gold: #f0b429; --gold-bg: #2a2410;
-    --danger: #e24b4a; --danger-bg: #2a1414;
-    --green: #3ecf8e;
-    --border: rgba(255,255,255,0.1);
-    --radius: 12px; --radius-sm: 8px;
+    --bg:#0e0e10; --surface:#1a1a1e; --surface2:#232328;
+    --text:#f2f2f0; --muted:#8a8a90; --hint:#5c5c63;
+    --info:#4a9eff; --info-bg:#12283f;
+    --gold:#f0b429; --gold-bg:#2a2410;
+    --danger:#e24b4a; --danger-bg:#2a1414;
+    --green:#3ecf8e; --green-bg:#0f2a1f;
+    --purple:#a78bfa; --purple-bg:#1e1733;
+    --border:rgba(255,255,255,0.1); --radius:12px; --radius-sm:8px;
   }
-  * { box-sizing: border-box; }
-  html, body { margin:0; padding:0; background:var(--bg); color:var(--text);
+  * { box-sizing:border-box; }
+  html,body { margin:0; padding:0; background:var(--bg); color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Noto Sans JP",sans-serif;
     -webkit-tap-highlight-color:transparent; }
   .wrap { max-width:480px; margin:0 auto; padding:20px 16px 48px; }
-  .title { text-align:center; margin-bottom:16px; }
+  .title { text-align:center; margin-bottom:14px; }
   .title .label { font-size:12px; color:var(--muted); letter-spacing:0.15em; margin:0 0 6px; }
   .title h1 { font-size:19px; font-weight:500; margin:0; }
 
   .group-bar { display:flex; gap:8px; align-items:center; background:var(--surface);
     border:0.5px solid var(--border); border-radius:var(--radius-sm); padding:8px 10px;
-    margin-bottom:16px; font-size:13px; }
+    margin-bottom:14px; font-size:13px; }
   .group-bar .gname { flex:1; font-weight:500; color:var(--info); overflow:hidden;
     text-overflow:ellipsis; white-space:nowrap; }
   .group-bar button { border:0.5px solid var(--border); background:var(--surface2);
     color:var(--text); border-radius:6px; padding:5px 10px; font-size:12px; cursor:pointer; }
+
+  .streak-row { display:flex; gap:8px; margin-bottom:14px; }
+  .streak-chip { flex:1; background:var(--green-bg); border:0.5px solid var(--green);
+    border-radius:var(--radius-sm); padding:8px 10px; text-align:center; }
+  .streak-chip .k { font-size:11px; color:var(--green); margin:0 0 2px; }
+  .streak-chip .v { font-size:16px; font-weight:500; margin:0; font-variant-numeric:tabular-nums; }
+  .streak-chip.purple { background:var(--purple-bg); border-color:var(--purple); }
+  .streak-chip.purple .k { color:var(--purple); }
 
   .level-row { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
   .level-badge { background:var(--gold-bg); color:var(--gold); border:0.5px solid var(--gold);
@@ -40,29 +48,42 @@
   .level-prog .bar > div { height:100%; background:var(--gold); width:0%; transition:width 0.3s; }
   .level-prog .txt { font-size:11px; color:var(--hint); margin-top:4px; }
 
-  .count-block { text-align:center; margin-bottom:20px; }
+  .count-block { text-align:center; margin-bottom:18px; }
   .count { font-size:60px; font-weight:500; line-height:1; font-variant-numeric:tabular-nums;
-    letter-spacing:-0.02em; transition:transform 0.08s; }
+    letter-spacing:-0.02em; transition:transform 0.08s, color 0.1s; }
   .count.bump { transform:scale(1.06); }
+  .count.crit { color:var(--gold); transform:scale(1.15); }
   .status { font-size:12px; color:var(--hint); margin:8px 0 0; }
+  .float { position:absolute; font-weight:500; pointer-events:none; animation:floatUp 0.9s ease-out forwards; }
+  @keyframes floatUp { 0%{opacity:1; transform:translateY(0)} 100%{opacity:0; transform:translateY(-40px)} }
+
+  .stamina-block { margin-bottom:12px; }
+  .stamina-head { display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px; }
+  .stamina-head .k { color:var(--muted); }
+  .stamina-head .v { color:var(--info); font-weight:500; font-variant-numeric:tabular-nums; }
+  .stamina-bar { height:10px; background:var(--surface2); border-radius:5px; overflow:hidden; display:flex; gap:2px; padding:2px; }
+  .pip { flex:1; background:var(--surface); border-radius:2px; }
+  .pip.full { background:var(--info); }
 
   .bigbtn { width:100%; height:96px; font-size:24px; font-weight:500;
     border:2px solid var(--info); border-radius:var(--radius); background:var(--info-bg);
-    color:var(--info); cursor:pointer; margin-bottom:12px; transition:transform 0.05s; user-select:none; }
+    color:var(--info); cursor:pointer; margin-bottom:6px; transition:transform 0.05s; user-select:none;
+    position:relative; overflow:hidden; }
   .bigbtn:active { transform:scale(0.98); }
-  .bigbtn:disabled { opacity:0.4; cursor:default; }
+  .bigbtn:disabled { opacity:0.45; cursor:default; border-color:var(--hint); color:var(--hint); }
+  .cd-hint { text-align:center; font-size:12px; color:var(--hint); margin:0 0 14px; min-height:16px; }
   .shake { animation:shake 0.4s; }
   @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)}
     40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
 
-  .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
   .stat { background:var(--surface); border-radius:var(--radius-sm); padding:12px; text-align:center; }
   .stat p { margin:0; }
   .stat .k { font-size:12px; color:var(--muted); margin-bottom:4px; }
   .stat .v { font-size:20px; font-weight:500; font-variant-numeric:tabular-nums; }
 
   .destroy-block { background:var(--surface); border:0.5px solid var(--border);
-    border-radius:var(--radius-sm); padding:12px; margin-bottom:16px; }
+    border-radius:var(--radius-sm); padding:12px; margin-bottom:14px; }
   .destroy-block .head { display:flex; justify-content:space-between; align-items:center;
     font-size:13px; margin-bottom:8px; }
   .destroy-block .head .lbl { color:var(--muted); }
@@ -89,9 +110,12 @@
 
   .log { margin-top:16px; font-size:12px; color:var(--hint); text-align:center; min-height:18px; }
   .toast { position:fixed; left:50%; top:24px; transform:translateX(-50%) translateY(-80px);
-    background:var(--gold); color:#000; font-weight:500; padding:10px 20px; border-radius:999px;
-    font-size:14px; opacity:0; transition:all 0.4s; z-index:20; pointer-events:none; }
+    color:#000; font-weight:500; padding:10px 20px; border-radius:999px; font-size:14px;
+    opacity:0; transition:all 0.4s; z-index:40; pointer-events:none; max-width:90%; text-align:center; }
   .toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+  .toast.gold { background:var(--gold); }
+  .toast.purple { background:var(--purple); color:#fff; }
+  .toast.danger { background:var(--danger); color:#fff; }
 
   .modal-bg { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:none;
     align-items:center; justify-content:center; padding:16px; z-index:30; }
@@ -124,6 +148,11 @@
     <button id="switchGroup">グループ切替</button>
   </div>
 
+  <div class="streak-row">
+    <div class="streak-chip"><p class="k">🔥 連続ログイン</p><p class="v" id="streakDays">0日</p></div>
+    <div class="streak-chip purple"><p class="k">🏅 称号</p><p class="v" id="titleName" style="font-size:13px;">新人</p></div>
+  </div>
+
   <div class="level-row">
     <span class="level-badge" id="levelBadge">Lv.1</span>
     <div class="level-prog">
@@ -132,12 +161,21 @@
     </div>
   </div>
 
-  <div class="count-block">
+  <div class="count-block" style="position:relative;">
     <div class="count" id="count">—</div>
     <p class="status" id="status">接続中…</p>
   </div>
 
+  <div class="stamina-block">
+    <div class="stamina-head">
+      <span class="k">⚡ スタミナ</span>
+      <span class="v" id="staminaTxt">0 / 0</span>
+    </div>
+    <div class="stamina-bar" id="staminaBar"></div>
+  </div>
+
   <button class="bigbtn" id="bigbtn" disabled>押す</button>
+  <p class="cd-hint" id="cdHint"></p>
 
   <div class="stats">
     <div class="stat"><p class="k">あなたの貢献</p><p class="v" id="mine">0</p></div>
@@ -209,202 +247,244 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
 const $ = id => document.getElementById(id);
 
-// レベル閾値（世界カウントがこの値を超えるとレベルアップ）
-const LEVELS = [0, 1000, 5000, 10000, 50000, 100000, 500000, 1000000, 5000000, 10000000];
-function levelOf(count){
-  let lv = 1;
-  for (let i=1;i<LEVELS.length;i++){ if (count >= LEVELS[i]) lv = i+1; }
-  return lv;
-}
+// ---- 設定値 ----
+const COOLDOWN_MS = 3000;            // 押下後のクールダウン
+const STAMINA_REGEN_MS = 60000;      // スタミナ1回復にかかる時間
+const BASE_MAX_STAMINA = 10;         // 基本最大スタミナ
+const LEVELS = [0,1000,5000,10000,50000,100000,500000,1000000,5000000,10000000];
+const TITLES = [ // [必要連続日数, 称号]
+  [0,"新人"],[2,"常連"],[3,"中毒者"],[5,"指の達人"],[7,"神の指"],[14,"押下の鬼"],[30,"伝説"]
+];
+
+function levelOf(c){ let lv=1; for(let i=1;i<LEVELS.length;i++){ if(c>=LEVELS[i]) lv=i+1; } return lv; }
 function nextThreshold(lv){ return LEVELS[lv] ?? null; }
-// レベルに応じた破壊コスト
-function destroyCost(lv){ return 100 * lv; }
+function destroyCost(lv){ return 100*lv; }
+function maxStamina(streak){ return BASE_MAX_STAMINA + Math.min(streak,20); } // 連続日数で最大+1/日(上限+20)
+function titleFor(streak){ let t="新人"; for(const[d,n]of TITLES){ if(streak>=d) t=n; } return t; }
 
 let currentGroup = localStorage.getItem("tb_group") || "";
 let myName = localStorage.getItem("tb_name") || "";
-let mine = 0, charge = 0, prevLevel = 1, firstLoad = true;
-let pendingDestroy = false;
+let mine=0, charge=0, prevLevel=1, firstLoad=true;
+let stamina=0, lastRegen=Date.now(), lastPress=0, streak=0;
 
-function groupPath(g){ return g ? "groups/" + g : "global"; }
-function groupLabel(g){ return g ? "🔒 " + g : "🌍 全世界共通"; }
-function uid(){
-  let u = localStorage.getItem("tb_uid");
-  if (!u){ u = "u" + Math.random().toString(36).slice(2,10); localStorage.setItem("tb_uid", u); }
-  return u;
+function groupPath(g){ return g ? "groups/"+g : "global"; }
+function groupLabel(g){ return g ? "🔒 "+g : "🌍 全世界共通"; }
+function lsk(k){ return "tb_"+k+"_"+(currentGroup||"global"); }
+function uid(){ let u=localStorage.getItem("tb_uid"); if(!u){u="u"+Math.random().toString(36).slice(2,10);localStorage.setItem("tb_uid",u);} return u; }
+function esc(s){ return String(s).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
+function todayStr(){ const d=new Date(); return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate(); }
+
+function toast(msg,kind){ const t=$("toast"); t.textContent=msg; t.className="toast show "+(kind||"gold"); setTimeout(()=>t.classList.remove("show"),2600); }
+
+// ---- 連続ログイン処理 ----
+function handleStreak(){
+  const today = todayStr();
+  const last = localStorage.getItem("tb_lastlogin");
+  streak = parseInt(localStorage.getItem("tb_streak")||"0");
+  if (last !== today){
+    const y = new Date(); y.setDate(y.getDate()-1);
+    const yStr = y.getFullYear()+"-"+(y.getMonth()+1)+"-"+y.getDate();
+    if (last === yStr) streak += 1;        // 昨日来てた → 継続
+    else streak = 1;                        // 途切れた or 初回
+    localStorage.setItem("tb_streak", streak);
+    localStorage.setItem("tb_lastlogin", today);
+    if (streak>1) setTimeout(()=>toast(`🔥 ${streak}日連続ログイン！最大スタミナ +${Math.min(streak,20)}`,"purple"),800);
+  }
+  $("streakDays").textContent = streak + "日";
+  $("titleName").textContent = titleFor(streak);
 }
 
-function toast(msg){
-  const t = $("toast"); t.textContent = msg; t.classList.add("show");
-  setTimeout(()=>t.classList.remove("show"), 2200);
+// ---- スタミナ ----
+function loadStamina(){
+  stamina = parseInt(localStorage.getItem("tb_stamina")||String(maxStamina(streak)));
+  lastRegen = parseInt(localStorage.getItem("tb_lastregen")||String(Date.now()));
+  regen();
+}
+function regen(){
+  const max = maxStamina(streak);
+  const now = Date.now();
+  if (stamina < max){
+    const gained = Math.floor((now-lastRegen)/STAMINA_REGEN_MS);
+    if (gained>0){ stamina = Math.min(max, stamina+gained); lastRegen += gained*STAMINA_REGEN_MS; }
+  } else { lastRegen = now; }
+  localStorage.setItem("tb_stamina", stamina);
+  localStorage.setItem("tb_lastregen", lastRegen);
+}
+function renderStamina(){
+  const max = maxStamina(streak);
+  $("staminaTxt").textContent = `${stamina} / ${max}`;
+  const bar = $("staminaBar"); bar.innerHTML="";
+  for(let i=0;i<max;i++){ const p=document.createElement("div"); p.className="pip"+(i<stamina?" full":""); bar.appendChild(p); }
+}
+
+// ---- ボタン状態 ----
+function updateButton(){
+  regen();
+  const now = Date.now();
+  const cdLeft = Math.max(0, COOLDOWN_MS-(now-lastPress));
+  const max = maxStamina(streak);
+  if (stamina<=0){
+    const need = STAMINA_REGEN_MS-((now-lastRegen)%STAMINA_REGEN_MS);
+    $("bigbtn").disabled=true; $("bigbtn").textContent="スタミナ切れ";
+    $("cdHint").textContent = `次の回復まで ${Math.ceil(need/1000)}秒`;
+  } else if (cdLeft>0){
+    $("bigbtn").disabled=true; $("bigbtn").textContent=`クールダウン ${Math.ceil(cdLeft/1000)}秒`;
+    $("cdHint").textContent = "";
+  } else {
+    $("bigbtn").disabled=false; $("bigbtn").textContent="押す";
+    $("cdHint").textContent = stamina<max ? `スタミナ回復中…（${stamina}/${max}）` : "";
+  }
+  renderStamina();
+}
+
+// ---- レアリティ抽選 ----
+function rollPress(){
+  const r = Math.random();
+  if (r < 0.0005) return { add:1000, kind:"jackpot" };
+  if (r < 0.005)  return { add:100,  kind:"super" };
+  if (r < 0.05)   return { add:10,   kind:"crit" };
+  return { add:1, kind:"normal" };
+}
+function floatText(txt,color){
+  const cb=$("count").parentElement;
+  const el=document.createElement("div");
+  el.className="float"; el.textContent=txt; el.style.color=color;
+  el.style.left="50%"; el.style.top="10px"; el.style.transform="translateX(-50%)";
+  cb.appendChild(el); setTimeout(()=>el.remove(),900);
 }
 
 function renderCharge(lv){
-  const cost = destroyCost(lv);
-  const pct = Math.min(100, Math.round(charge/cost*100));
-  $("chargeBar").style.width = pct + "%";
-  $("chargeTxt").textContent = `${charge.toLocaleString()} / ${cost.toLocaleString()}`;
-  const ready = charge >= cost;
-  $("destroy").disabled = !ready;
-  $("destroy").textContent = ready ? "💣 全てを破壊する（発動可能！）" : `💣 破壊にはあと ${(cost-charge).toLocaleString()} 回`;
+  const cost=destroyCost(lv);
+  $("chargeBar").style.width=Math.min(100,Math.round(charge/cost*100))+"%";
+  $("chargeTxt").textContent=`${charge.toLocaleString()} / ${cost.toLocaleString()}`;
+  const ready=charge>=cost;
+  $("destroy").disabled=!ready;
+  $("destroy").textContent=ready?"💣 全てを破壊する（発動可能！）":`💣 破壊にはあと ${(cost-charge).toLocaleString()} 貢献`;
+}
+function renderRanks(s){
+  const c=s.contrib||{};
+  const arr=Object.values(c).sort((a,b)=>b.score-a.score).slice(0,5);
+  $("contribList").innerHTML = arr.length? arr.map((r,i)=>{
+    const cls=i===0?"rank-row gold":"rank-row"; const crown=i===0?"👑 ":"";
+    return `<div class="${cls}"><span class="pos">${i+1}</span><span class="nm">${crown}${esc(r.name)}</span><span class="sc">${(r.score||0).toLocaleString()}</span></div>`;
+  }).join("") : '<p class="empty">まだ誰も押していない</p>';
+  const dz=s.destroyers||{};
+  const darr=Object.values(dz).sort((a,b)=>b.count-a.count).slice(0,5);
+  $("destroyerList").innerHTML = darr.length? darr.map((r,i)=>
+    `<div class="rank-row danger"><span class="pos">${i+1}</span><span class="nm">💀 ${esc(r.name)}</span><span class="sc">${r.count||0}回</span></div>`
+  ).join("") : '<p class="empty">まだ平和</p>';
 }
 
-function renderRanks(state){
-  const contrib = state.contrib || {};
-  const arr = Object.entries(contrib).map(([k,v])=>v).sort((a,b)=>b.score-a.score).slice(0,5);
-  if (arr.length===0){ $("contribList").innerHTML = '<p class="empty">まだ誰も押していない</p>'; }
-  else {
-    $("contribList").innerHTML = arr.map((r,i)=>{
-      const cls = i===0 ? "rank-row gold" : "rank-row";
-      const crown = i===0 ? "👑 " : "";
-      return `<div class="${cls}"><span class="pos">${i+1}</span><span class="nm">${crown}${esc(r.name)}</span><span class="sc">${(r.score||0).toLocaleString()}</span></div>`;
-    }).join("");
-  }
-  const dz = state.destroyers || {};
-  const darr = Object.entries(dz).map(([k,v])=>v).sort((a,b)=>b.count-a.count).slice(0,5);
-  if (darr.length===0){ $("destroyerList").innerHTML = '<p class="empty">まだ平和</p>'; }
-  else {
-    $("destroyerList").innerHTML = darr.map((r,i)=>
-      `<div class="rank-row danger"><span class="pos">${i+1}</span><span class="nm">💀 ${esc(r.name)}</span><span class="sc">${(r.count||0)}回</span></div>`
-    ).join("");
-  }
-}
-function esc(s){ return String(s).replace(/[<>&]/g, c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
-
-let unsub = null;
+let unsub=null;
 function watch(){
-  if (unsub) unsub();
-  firstLoad = true;
-  $("gname").textContent = groupLabel(currentGroup);
-  $("ctx-title").textContent = currentGroup ? `「${currentGroup}」のボタン` : "全人類が押す1つのボタン";
-  mine = parseInt(localStorage.getItem("tb_mine_"+(currentGroup||"global"))||"0");
-  charge = parseInt(localStorage.getItem("tb_charge_"+(currentGroup||"global"))||"0");
-  $("mine").textContent = mine.toLocaleString();
-
-  onValue(ref(db, groupPath(currentGroup)), snap => {
-    const s = snap.val() || {};
-    const count = s.count||0;
-    $("count").textContent = count.toLocaleString();
-    $("peak").textContent = (s.peak||0).toLocaleString();
-    $("status").textContent = "接続済み · リアルタイム同期中";
-    $("bigbtn").disabled = false;
-
-    const lv = levelOf(count);
-    $("levelBadge").textContent = "Lv." + lv;
-    const nt = nextThreshold(lv);
-    if (nt){
-      const base = LEVELS[lv-1];
-      const pct = Math.round((count-base)/(nt-base)*100);
-      $("levelBar").style.width = Math.min(100,pct) + "%";
-      $("levelTxt").textContent = `次のレベルまで ${(nt-count).toLocaleString()}`;
-    } else {
-      $("levelBar").style.width = "100%";
-      $("levelTxt").textContent = "最高レベル到達！";
-    }
+  if(unsub) unsub();
+  firstLoad=true;
+  $("gname").textContent=groupLabel(currentGroup);
+  $("ctx-title").textContent=currentGroup?`「${currentGroup}」のボタン`:"全人類が押す1つのボタン";
+  mine=parseInt(localStorage.getItem(lsk("mine"))||"0");
+  charge=parseInt(localStorage.getItem(lsk("charge"))||"0");
+  $("mine").textContent=mine.toLocaleString();
+  unsub=onValue(ref(db,groupPath(currentGroup)), snap=>{
+    const s=snap.val()||{}; const count=s.count||0;
+    $("count").textContent=count.toLocaleString();
+    $("peak").textContent=(s.peak||0).toLocaleString();
+    $("status").textContent="接続済み · リアルタイム同期中";
+    const lv=levelOf(count);
+    $("levelBadge").textContent="Lv."+lv;
+    const nt=nextThreshold(lv);
+    if(nt){ const base=LEVELS[lv-1]; $("levelBar").style.width=Math.min(100,Math.round((count-base)/(nt-base)*100))+"%"; $("levelTxt").textContent=`次のレベルまで ${(nt-count).toLocaleString()}`; }
+    else { $("levelBar").style.width="100%"; $("levelTxt").textContent="最高レベル到達！"; }
     renderCharge(lv);
-
-    if (!firstLoad && lv > prevLevel){
-      toast(`🎉 レベルアップ！ Lv.${lv} 達成！`);
-    }
-    prevLevel = lv; firstLoad = false;
-
-    if (s.lastDestroyer){
-      $("log").textContent = `最後の破壊者: ${s.lastDestroyer} （${s.destroyTotal||0}回目の崩壊）`;
-    } else {
-      $("log").textContent = "まだ誰も破壊していない。平和。";
-    }
+    if(!firstLoad && lv>prevLevel) toast(`🎉 レベルアップ！ Lv.${lv} 達成！`,"gold");
+    prevLevel=lv; firstLoad=false;
+    $("log").textContent = s.lastDestroyer ? `最後の破壊者: ${s.lastDestroyer} （${s.destroyTotal||0}回目の崩壊）` : "まだ誰も破壊していない。平和。";
     renderRanks(s);
-  }, err => { $("status").textContent = "接続エラー: Firebase設定を確認してください"; });
+    updateButton();
+  }, err=>{ $("status").textContent="接続エラー: Firebase設定を確認してください"; });
 }
 
-function requireName(cb, isDestroy){
-  if (myName){ cb(); return; }
-  $("nameTitle").textContent = isDestroy ? "破壊者として名を刻む" : "名前を入力";
-  $("nameDesc").textContent = isDestroy ? "破壊神の殿堂に記録されます。" : "貢献ランキングに表示されます。";
-  $("nameErr").textContent = "";
-  $("nameInput").value = "";
-  $("nameBg").classList.add("show");
-  $("nameInput").focus();
-  pendingCb = cb;
+function requireName(cb,isDestroy){
+  if(myName){ cb(); return; }
+  $("nameTitle").textContent=isDestroy?"破壊者として名を刻む":"名前を入力";
+  $("nameDesc").textContent=isDestroy?"破壊神の殿堂に記録されます。":"貢献ランキングに表示されます。";
+  $("nameErr").textContent=""; $("nameInput").value="";
+  $("nameBg").classList.add("show"); $("nameInput").focus(); pendingCb=cb;
 }
-let pendingCb = null;
-$("nameOk").addEventListener("click", ()=>{
-  const v = $("nameInput").value.trim().slice(0,20);
-  if (!v){ $("nameErr").textContent = "名前を入れてください"; return; }
-  myName = v; localStorage.setItem("tb_name", v);
-  $("nameBg").classList.remove("show");
-  if (pendingCb){ const f=pendingCb; pendingCb=null; f(); }
+let pendingCb=null;
+$("nameOk").addEventListener("click",()=>{
+  const v=$("nameInput").value.trim().slice(0,20);
+  if(!v){ $("nameErr").textContent="名前を入れてください"; return; }
+  myName=v; localStorage.setItem("tb_name",v); $("nameBg").classList.remove("show");
+  if(pendingCb){ const f=pendingCb; pendingCb=null; f(); }
 });
-$("nameCancel").addEventListener("click", ()=>{ $("nameBg").classList.remove("show"); pendingCb=null; });
+$("nameCancel").addEventListener("click",()=>{ $("nameBg").classList.remove("show"); pendingCb=null; });
 
-$("bigbtn").addEventListener("click", ()=>{
+$("bigbtn").addEventListener("click",()=>{
+  regen();
+  const now=Date.now();
+  if(stamina<=0){ toast("スタミナ切れ。回復を待とう","danger"); return; }
+  if(now-lastPress<COOLDOWN_MS) return;
   requireName(()=>{
-    mine++; charge++;
-    localStorage.setItem("tb_mine_"+(currentGroup||"global"), mine);
-    localStorage.setItem("tb_charge_"+(currentGroup||"global"), charge);
-    $("mine").textContent = mine.toLocaleString();
-    const c = $("count");
-    c.classList.add("bump"); setTimeout(()=>c.classList.remove("bump"),80);
-    runTransaction(ref(db, groupPath(currentGroup)), cur=>{
-      cur = cur || {};
-      cur.count = (cur.count||0)+1;
-      if (cur.count > (cur.peak||0)) cur.peak = cur.count;
-      cur.contrib = cur.contrib || {};
-      const u = uid();
-      cur.contrib[u] = { name: myName, score: ((cur.contrib[u]?.score)||0)+1 };
+    const roll=rollPress();
+    stamina-=1; lastPress=Date.now();
+    localStorage.setItem("tb_stamina",stamina); localStorage.setItem(lsk("mine"),mine+roll.add);
+    mine+=roll.add; charge+=roll.add;
+    localStorage.setItem(lsk("charge"),charge);
+    $("mine").textContent=mine.toLocaleString();
+    const c=$("count");
+    if(roll.kind==="normal"){ c.classList.add("bump"); setTimeout(()=>c.classList.remove("bump"),80); floatText("+1","var(--info)"); }
+    else { c.classList.add("crit"); setTimeout(()=>c.classList.remove("crit"),200); }
+    if(roll.kind==="crit"){ floatText("CRITICAL +10","var(--gold)"); toast("⚡ クリティカル！ +10","gold"); }
+    if(roll.kind==="super"){ floatText("SUPER +100","var(--purple)"); toast("💥 スーパークリティカル！ +100","purple"); }
+    if(roll.kind==="jackpot"){ floatText("JACKPOT +1000","var(--gold)"); toast(`🎰 ${myName} がジャックポット！ +1000`,"gold"); document.querySelector(".wrap").classList.add("shake"); setTimeout(()=>document.querySelector(".wrap").classList.remove("shake"),400); }
+    runTransaction(ref(db,groupPath(currentGroup)),cur=>{
+      cur=cur||{};
+      cur.count=(cur.count||0)+roll.add;
+      if(cur.count>(cur.peak||0)) cur.peak=cur.count;
+      cur.contrib=cur.contrib||{}; const u=uid();
+      cur.contrib[u]={ name:myName, score:((cur.contrib[u]?.score)||0)+roll.add };
       return cur;
     });
-    const lv = levelOf(parseInt($("count").textContent.replace(/,/g,''))||0);
-    renderCharge(lv);
-  }, false);
+    updateButton();
+  },false);
 });
 
-$("destroy").addEventListener("click", ()=>{
+$("destroy").addEventListener("click",()=>{
   requireName(()=>{
-    const count = parseInt($("count").textContent.replace(/,/g,''))||0;
-    const lv = levelOf(count);
-    const cost = destroyCost(lv);
-    if (charge < cost){ toast("ゲージが足りない"); return; }
-    if (!confirm(`破壊ゲージ ${cost} を消費して世界を0に戻します。よろしいですか？`)) return;
-    charge -= cost;
-    localStorage.setItem("tb_charge_"+(currentGroup||"global"), charge);
-    document.querySelector(".wrap").classList.add("shake");
-    setTimeout(()=>document.querySelector(".wrap").classList.remove("shake"),400);
-    runTransaction(ref(db, groupPath(currentGroup)), cur=>{
-      cur = cur || {};
-      if ((cur.count||0) > (cur.peak||0)) cur.peak = cur.count;
-      cur.count = 0;
-      cur.destroyTotal = (cur.destroyTotal||0)+1;
-      cur.lastDestroyer = myName;
-      cur.destroyers = cur.destroyers || {};
-      const u = uid();
-      cur.destroyers[u] = { name: myName, count: ((cur.destroyers[u]?.count)||0)+1 };
+    const count=parseInt($("count").textContent.replace(/,/g,''))||0;
+    const lv=levelOf(count); const cost=destroyCost(lv);
+    if(charge<cost){ toast("破壊ゲージが足りない","danger"); return; }
+    if(!confirm(`破壊ゲージ ${cost} を消費して世界を0に戻します。よろしいですか？`)) return;
+    charge-=cost; localStorage.setItem(lsk("charge"),charge);
+    document.querySelector(".wrap").classList.add("shake"); setTimeout(()=>document.querySelector(".wrap").classList.remove("shake"),400);
+    runTransaction(ref(db,groupPath(currentGroup)),cur=>{
+      cur=cur||{};
+      if((cur.count||0)>(cur.peak||0)) cur.peak=cur.count;
+      cur.count=0; cur.destroyTotal=(cur.destroyTotal||0)+1; cur.lastDestroyer=myName;
+      cur.destroyers=cur.destroyers||{}; const u=uid();
+      cur.destroyers[u]={ name:myName, count:((cur.destroyers[u]?.count)||0)+1 };
       return cur;
     });
-    toast("💥 世界を破壊した");
+    toast("💥 世界を破壊した","danger");
     renderCharge(lv);
-  }, true);
+  },true);
 });
 
-$("switchGroup").addEventListener("click", ()=>{
-  $("groupInput").value = currentGroup;
-  $("groupErr").textContent = "";
-  $("modalBg").classList.add("show");
-});
-$("cancelGroup").addEventListener("click", ()=>$("modalBg").classList.remove("show"));
-$("joinGroup").addEventListener("click", ()=>{
-  let g = $("groupInput").value.trim();
-  if (g && !/^[a-zA-Z0-9_\-ぁ-んァ-ヶ一-龠]+$/.test(g)){
-    $("groupErr").textContent = "使える文字: 英数字・かな・漢字・_ -"; return;
-  }
-  currentGroup = g; localStorage.setItem("tb_group", g);
-  $("modalBg").classList.remove("show");
-  prevLevel = 1; watch();
+$("switchGroup").addEventListener("click",()=>{ $("groupInput").value=currentGroup; $("groupErr").textContent=""; $("modalBg").classList.add("show"); });
+$("cancelGroup").addEventListener("click",()=>$("modalBg").classList.remove("show"));
+$("joinGroup").addEventListener("click",()=>{
+  let g=$("groupInput").value.trim();
+  if(g && !/^[a-zA-Z0-9_\-ぁ-んァ-ヶ一-龠]+$/.test(g)){ $("groupErr").textContent="使える文字: 英数字・かな・漢字・_ -"; return; }
+  currentGroup=g; localStorage.setItem("tb_group",g); $("modalBg").classList.remove("show"); prevLevel=1; watch();
 });
 
+handleStreak();
+loadStamina();
+renderStamina();
 watch();
+setInterval(updateButton, 1000);
 </script>
 </body>
 </html>
