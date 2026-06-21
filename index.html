@@ -250,7 +250,6 @@ const db = getDatabase(app);
 const $ = id => document.getElementById(id);
 
 // ---- 設定値 ----
-const COOLDOWN_MS = 3000;            // 押下後のクールダウン
 const STAMINA_REGEN_MS = 60000;      // スタミナ1回復にかかる時間
 const BASE_MAX_STAMINA = 10;         // 基本最大スタミナ
 const LEVELS = [0,1000,5000,10000,50000,100000,500000,1000000,5000000,10000000];
@@ -267,7 +266,7 @@ function titleFor(streak){ let t="新人"; for(const[d,n]of TITLES){ if(streak>=
 let currentGroup = localStorage.getItem("tb_group") || "";
 let myName = localStorage.getItem("tb_name") || "";
 let mine=0, charge=0, prevLevel=1, firstLoad=true;
-let stamina=0, lastRegen=Date.now(), lastPress=0, streak=0;
+let stamina=0, lastRegen=Date.now(), streak=0;
 
 function groupPath(g){ return g ? "groups/"+g : "global"; }
 function groupLabel(g){ return g ? "🔒 "+g : "🌍 全世界共通"; }
@@ -323,15 +322,11 @@ function renderStamina(){
 function updateButton(){
   regen();
   const now = Date.now();
-  const cdLeft = Math.max(0, COOLDOWN_MS-(now-lastPress));
   const max = maxStamina(streak);
   if (stamina<=0){
     const need = STAMINA_REGEN_MS-((now-lastRegen)%STAMINA_REGEN_MS);
     $("bigbtn").disabled=true; $("bigbtn").textContent="スタミナ切れ";
     $("cdHint").textContent = `次の回復まで ${Math.ceil(need/1000)}秒`;
-  } else if (cdLeft>0){
-    $("bigbtn").disabled=true; $("bigbtn").textContent=`クールダウン ${Math.ceil(cdLeft/1000)}秒`;
-    $("cdHint").textContent = "";
   } else {
     $("bigbtn").disabled=false; $("bigbtn").textContent="押す";
     $("cdHint").textContent = stamina<max ? `スタミナ回復中…（${stamina}/${max}）` : "";
@@ -423,12 +418,10 @@ $("nameCancel").addEventListener("click",()=>{ $("nameBg").classList.remove("sho
 
 $("bigbtn").addEventListener("click",()=>{
   regen();
-  const now=Date.now();
   if(stamina<=0){ toast("スタミナ切れ。回復を待とう","danger"); return; }
-  if(now-lastPress<COOLDOWN_MS) return;
   requireName(()=>{
     const roll=rollPress();
-    stamina-=1; lastPress=Date.now();
+    stamina-=1;
     localStorage.setItem("tb_stamina",stamina); localStorage.setItem(lsk("mine"),mine+roll.add);
     mine+=roll.add; charge+=roll.add;
     localStorage.setItem(lsk("charge"),charge);
